@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
+  final _tLogin = TextEditingController();
+  final _tSenha = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,17 +20,17 @@ class LoginPage extends StatelessWidget {
       padding: EdgeInsets.all(16),
       child: ListView(
         children: <Widget>[
-          _text("Login", "Informe o login"),
+          _text("Login", "Informe o login",controller: _tLogin),
           SizedBox(height: 20,),
-          _text("Senha", "Informe a senha", password: true),
+          _text("Senha", "Informe a senha", password: true, controller: _tSenha),
           SizedBox(height: 20,),
-          _button("Login")
+          _button("Login", _onClickLogin)
         ],
       ),
     );
   }
 
-  Container _button(String text) {
+  Container _button(String text, Function onPressed) {
     return Container(
           height: 46,
           child: RaisedButton(
@@ -40,14 +42,15 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             color: Colors.blue,
-            onPressed: () {},
+            onPressed: onPressed,
           ),
         );
   }
 
-  TextFormField _text(String text, String hint_text, {bool password = false}) {
+  TextFormField _text(String text, String hint_text, {bool password = false, TextEditingController controller}) {
     return TextFormField(
           obscureText: password ,
+          controller: controller,
           style: TextStyle(
             fontSize: 20
           ),
@@ -59,5 +62,11 @@ class LoginPage extends StatelessWidget {
             hintText: hint_text
           ),
         );
+  }
+
+  void _onClickLogin() {
+    String login = _tLogin.text;
+    String senha = _tSenha.text;
+    print("Login: $login Senha: $senha");
   }
 }
