@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class LoginPage extends StatelessWidget {
   final _tLogin = TextEditingController();
   final _tSenha = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,32 +31,43 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Container _button(String text, Function onPressed) {
-    return Container(
-          height: 46,
-          child: RaisedButton(
-            child: Text(
-              text,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
+   _button(String text, Function onPressed) {
+    return Form(
+      key: _formKey,
+      child: Container(
+            height: 46,
+            child: RaisedButton(
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
               ),
+              color: Colors.blue,
+              onPressed: onPressed,
             ),
-            color: Colors.blue,
-            onPressed: onPressed,
           ),
-        );
+    );
   }
 
-  TextFormField _text(String text, String hint_text, {bool password = false, TextEditingController controller}) {
+  TextFormField _text(String label, String hint_text, {bool password = false, TextEditingController controller}) {
     return TextFormField(
           obscureText: password ,
           controller: controller,
+          autovalidate: true,
+          validator: (String text){
+            print(text.isEmpty);
+            if(text.isEmpty){
+                return "Digite o texto";
+            }
+            return null;
+          },
           style: TextStyle(
             fontSize: 20
           ),
           decoration: InputDecoration(
-            labelText: text,
+            labelText: label,
             labelStyle: TextStyle(
               fontSize: 20
             ),
@@ -65,6 +77,12 @@ class LoginPage extends StatelessWidget {
   }
 
   void _onClickLogin() {
+    bool formOk = _formKey.currentState.validate();
+    print(formOk);
+    if(!formOk){
+      return;
+    }
+
     String login = _tLogin.text;
     String senha = _tSenha.text;
     print("Login: $login Senha: $senha");
